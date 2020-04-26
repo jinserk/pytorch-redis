@@ -1,5 +1,7 @@
 # Basic MNIST Example with RedisClient
 
+Tested Python 3.7.7 and 3.8.2 with PyTorch 1.4.0
+
 ## Redis server installation
 
 ### install package
@@ -60,4 +62,4 @@ $ python main.py
 1. There exists [RedisLab's official Redis client for PyTorch](https://github.com/RedisAI/RedisAI), but it only supports tensor type to store.
    Using this project, you can store any structured data to a key such as list of tensors or list of tuple of tensors mixed with strings etc.
 2. In my experiment, `tensor.numpy()` has smaller memory footprint than `numpy ndarrays`.
-
+3. If `num_workers=0` in DataLoader, it inevitably slow than direct-access of in-memory data. Use multipe `num_workers` for the performance.
