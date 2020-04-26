@@ -43,11 +43,18 @@ If you want to make these changes effective after restarting redis, using
 
 ## Run MNIST example
 
+### Preparing dataset
 ```bash
-pip install -r requirements.txt
-python main.py
+$ pip install -r requirements.txt
+$ python dataset.py
+```
+
+### Training
+```bash
+$ python main.py
 # CUDA_VISIBLE_DEVICES=2 python main.py  # to specify GPU id to ex. 2
 ```
+
 ## Comments
 
 1. There exists [RedisLab's official Redis client for PyTorch](https://github.com/RedisAI/RedisAI), but it only supports tensor type to store.
