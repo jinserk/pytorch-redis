@@ -68,7 +68,7 @@ $ python main.py
 
 | Env                       | num_workers | elapsed time (15 epochs) |
 | ------------------------- | ----------- | ------------------------ |
-| torchvision MNIST dataset | 0           | 99.9 secs                |
+| torchvision MNIST dataset | 1           | 99.9 secs                |
 | RedisClient               | 4           | 350.4 secs               |
 | RedisClient               | 8           | 184.0 secs               |
 | RedisClient               | 16          | 116.6 secs               |
