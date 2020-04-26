@@ -1,5 +1,6 @@
 from __future__ import print_function
 import argparse
+import datetime as dt
 
 import torch
 import torch.nn as nn
@@ -99,7 +100,7 @@ def main():
 
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    kwargs = {'num_workers': 8, 'pin_memory': True} if use_cuda else {}
+    kwargs = {'num_workers': 16, 'pin_memory': True} if use_cuda else {}
     """
     train_loader = torch.utils.data.DataLoader(
         datasets.MNIST('../data', train=True, download=True,
@@ -132,8 +133,10 @@ def main():
 
     model = Net().to(device)
     optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
-
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
+
+    start = dt.datetime.now()
+
     for epoch in range(1, args.epochs + 1):
         train(args, model, device, train_loader, optimizer, epoch)
         test(model, device, test_loader)
@@ -142,6 +145,8 @@ def main():
     if args.save_model:
         torch.save(model.state_dict(), "mnist_cnn.pt")
 
+    end = dt.datetime.now()
+    print(f"elapsed time: {(end - start).total_seconds()} secs")
 
 if __name__ == '__main__':
     main()

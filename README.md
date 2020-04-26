@@ -63,3 +63,11 @@ $ python main.py
    Using this project, you can store any structured data to a key such as list of tensors or list of tuple of tensors mixed with strings etc.
 2. In my experiment, `tensor.numpy()` has smaller memory footprint than `numpy ndarrays`.
 3. If `num_workers=0` in DataLoader, it inevitably slow than direct-access of in-memory data. Use multipe `num_workers` for the performance.
+
+## Benchmark
+
+| Env                       | num_workers | elapsed time (15 epochs) |
+| ------------------------- | ----------- | ------------------------ |
+| torchvision MNIST dataset | 0           | 99.9 secs                |
+| RedisClient               | 8           | 184.0 secs               |
+| RedisClient               | 16          | 116.6 secs               |
