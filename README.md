@@ -1,6 +1,7 @@
 # Basic MNIST Example with RedisClient
 
 ## Redis server installation
+
 ### install package
 ```
 $ sudo apt update
@@ -41,13 +42,15 @@ If you want to make these changes effective after restarting redis, using
 ```
 
 ## Run MNIST example
+
 ```bash
 pip install -r requirements.txt
 python main.py
 # CUDA_VISIBLE_DEVICES=2 python main.py  # to specify GPU id to ex. 2
 ```
 ## Comments
+
 1. There exists [RedisLab's official Redis client for PyTorch](https://github.com/RedisAI/RedisAI), but it only supports tensor type to store.
-   Using this project, you can store any datatype of list of tensors or list of tuple of tensors mixed with strings etc.
+   Using this project, you can store any structured data to a key such as list of tensors or list of tuple of tensors mixed with strings etc.
 2. In my experiment, `tensor.numpy()` has smaller memory footprint than `numpy ndarrays`.
 
