@@ -61,10 +61,10 @@ $ python main.py
 
 1. There exists [RedisLab's official Redis module for PyTorch](https://github.com/RedisAI/RedisAI), but it only supports tensor type to store.
    Using this project, you can store any structured data associated to a key such as a list of tensors or a list of tuples of tensors mixed with strings etc.
-2. In my experiment, `tensor.numpy()` has smaller memory footprint than `numpy ndarrays`.
-3. If `num_workers=0` in DataLoader, it is inevitably slower than direct-access of in-memory data. Use multipe `num_workers` for the performance.
+2. In my experiment, `tensor.numpy()` has smaller memory footprint than `numpy ndarray`.
+3. If `num_workers=0` in DataLoader, it is inevitably much slower than direct-access of in-memory data. Use multipe `num_workers` for the performance.
 
-## Benchmark
+## Benchmarks
 
 | Env                       | num_workers | elapsed time (15 epochs) |
 | ------------------------- | ----------- | ------------------------ |
