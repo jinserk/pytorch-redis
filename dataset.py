@@ -7,7 +7,7 @@ from PIL import Image
 import numpy as np
 
 import torch
-import torch.utils.data import Dataset
+from torch.utils.data import Dataset
 from torchvision.datasets.utils import download_url, download_and_extract_archive, \
                                        extract_archive, verify_str_arg
 
@@ -32,7 +32,7 @@ classes = ['0 - zero', '1 - one', '2 - two', '3 - three', '4 - four',
            '5 - five', '6 - six', '7 - seven', '8 - eight', '9 - nine']
 
 
-class MNIST(Dataset):
+class MnistDataset(Dataset):
     """`MNIST <http://yann.lecun.com/exdb/mnist/>`_ Dataset.
 
     Args:
@@ -44,9 +44,11 @@ class MNIST(Dataset):
             target and transforms it.
     """
     def __init__(self, train=True, transform=None, target_transform=None):
-        super().__init__(transform=transform, target_transform=target_transform)
+        super().__init__()
         self.train = train  # training set or test set
         self.db_key = f"{dataset_name}_train" if train else f"{dataset_name}_test"
+        self.transform = transform
+        self.target_transform = target_transform
 
     def __getitem__(self, index):
         """
@@ -56,13 +58,13 @@ class MNIST(Dataset):
         Returns:
             tuple: (image, target) where target is index of the target class.
         """
-        # doing this so that it is consistent with all other datasets
-        # to return a PIL Image
-        img = Image.fromarray(img.numpy(), mode='L')
-
         rdb = RedisClient()
         d = rdb.get(self.db_key)[index]
         img, target = d[0], int(d[1])
+
+        # doing this so that it is consistent with all other datasets
+        # to return a PIL Image
+        img = Image.fromarray(img, mode='L')
 
         if self.transform is not None:
             img = self.transform(img)

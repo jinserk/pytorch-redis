@@ -1,3 +1,4 @@
+import sys
 import io
 import pickle
 
@@ -6,7 +7,12 @@ import torch
 from tqdm.auto import tqdm
 
 
-PICKLE_VERSION = 5
+ver = sys.version_info
+if ver >= (3, 8):
+    PICKLE_VERSION = 5
+else:
+    PICKLE_VERSION = 4
+
 CXN = redis.ConnectionPool(host='localhost', port=6379, db=0)
 
 
@@ -25,7 +31,10 @@ class RedisListObject:
                 raise IndexError
             with io.BytesIO() as buf:
                 torch.save(value, buf, pickle_protocol=PICKLE_VERSION)
-                rdb.lset(self.name, index, buf.getbuffer())
+                if PICKLE_VERSION >= 5:
+                    rdb.lset(self.name, index, buf.getbuffer())
+                else:
+                    rdb.lset(self.name, index, buf.getvalue())
 
     def __getitem__(self, index):
         with redis.StrictRedis(connection_pool=CXN) as rdb:
@@ -42,7 +51,10 @@ class RedisListObject:
             #print(len(buf.getvalue()))
             with redis.StrictRedis(connection_pool=CXN) as rdb:
                 func = rdb.rpush if rdb.exists(self.name) else rdb.lpush
-                func(self.name, buf.getbuffer())
+                if PICKLE_VERSION >= 5:
+                    func(self.name, buf.getbuffer())
+                else:
+                    func(self.name, buf.getvalue())
 
     def delete(self):
         with redis.StrictRedis(connection_pool=CXN) as rdb:
@@ -59,7 +71,7 @@ class RedisClient:
             if rdb.exists(key):
                 return RedisListObject(key)
             else:
-                raise redis.DataError(f'Dataset named {self.name} does not exist')
+                raise redis.DataError(f'Dataset named {key} does not exist')
 
     def set_data_list(self, key, values):
         try:
