@@ -138,6 +138,7 @@ def store_to_redis():
     db.set_data_list(f"{dataset_name}_train", trainset)
     db.set_data_list(f"{dataset_name}_test", testset)
 
+    print(db.stats())
 
 def get_int(b):
     return int(codecs.encode(b, 'hex'), 16)
@@ -207,4 +208,3 @@ if __name__ == "__main__":
     download()
     preprocess()
     store_to_redis()
-

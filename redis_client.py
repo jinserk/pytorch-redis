@@ -88,7 +88,10 @@ class RedisClient:
 
     def stats(self):
         with redis.StrictRedis(connection_pool=CXN) as rdb:
-            return rdb.memory_stats()
+            try:
+                return rdb.memory_stats()
+            except:
+                return rdb.execute_command('MEMORY STATS')
 
     def check_lens(self, nums):
         try:
@@ -112,5 +115,5 @@ if __name__ == "__main__":
     c.set_data_list("test", data_list)
     print(c.test[0], c.test[1])
 
-    c.delete_all()
+    c.flushdb()
     print(c.stats())
