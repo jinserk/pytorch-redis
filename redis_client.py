@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
     data_list = [tuple(torch.rand(10, 10) for _ in range(10)) for _ in range(10)]
     c.set_data_list("test", data_list)
-    print(c.test[0], c.test[1])
+    print(c.get("test")[0], c.get("test")[1])
 
     c.flushdb()
     print(c.stats())
