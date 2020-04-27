@@ -1,6 +1,5 @@
 import sys
 import io
-import pickle
 
 import redis
 import torch
@@ -30,7 +29,7 @@ class RedisListObject:
             if index >= rdb.llen(self.name):
                 raise IndexError
             with io.BytesIO() as buf:
-                torch.save(value, buf, pickle_protocol=PICKLE_VERSION)
+                torch.save(value, buf, pickle_protocol=PICKLE_VERSION, _use_new_zipfile_serialization=True)
                 if PICKLE_VERSION >= 5:
                     rdb.lset(self.name, index, buf.getbuffer())
                 else:
@@ -47,7 +46,7 @@ class RedisListObject:
 
     def append(self, value):
         with io.BytesIO() as buf:
-            torch.save(value, buf, pickle_protocol=PICKLE_VERSION)
+            torch.save(value, buf, pickle_protocol=PICKLE_VERSION, _use_new_zipfile_serialization=True)
             #print(len(buf.getvalue()))
             with redis.StrictRedis(connection_pool=CXN) as rdb:
                 func = rdb.rpush if rdb.exists(self.name) else rdb.lpush

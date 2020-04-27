@@ -100,36 +100,37 @@ def main():
 
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    kwargs = {'num_workers': 16, 'pin_memory': True} if use_cuda else {}
-    """
-    train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=True, download=True,
-                       transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False, transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=args.test_batch_size, shuffle=True, **kwargs)
-    """
-    train_loader = torch.utils.data.DataLoader(
-        MnistDataset(train=True,
-                     transform=transforms.Compose([
-                         transforms.ToTensor(),
-                         transforms.Normalize((0.1307,), (0.3081,))
-                     ])),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        MnistDataset(train=False,
-                     transform=transforms.Compose([
-                         transforms.ToTensor(),
-                         transforms.Normalize((0.1307,), (0.3081,))
-                     ])),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
+    if True:
+        kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+        train_loader = torch.utils.data.DataLoader(
+            datasets.MNIST('../data', train=True, download=True,
+                           transform=transforms.Compose([
+                               transforms.ToTensor(),
+                               transforms.Normalize((0.1307,), (0.3081,))
+                           ])),
+            batch_size=args.batch_size, shuffle=True, **kwargs)
+        test_loader = torch.utils.data.DataLoader(
+            datasets.MNIST('../data', train=False, transform=transforms.Compose([
+                               transforms.ToTensor(),
+                               transforms.Normalize((0.1307,), (0.3081,))
+                           ])),
+            batch_size=args.test_batch_size, shuffle=True, **kwargs)
+    else:
+        kwargs = {'num_workers': 16, 'pin_memory': True} if use_cuda else {}
+        train_loader = torch.utils.data.DataLoader(
+            MnistDataset(train=True,
+                         transform=transforms.Compose([
+                             transforms.ToTensor(),
+                             transforms.Normalize((0.1307,), (0.3081,))
+                         ])),
+            batch_size=args.batch_size, shuffle=True, **kwargs)
+        test_loader = torch.utils.data.DataLoader(
+            MnistDataset(train=False,
+                         transform=transforms.Compose([
+                             transforms.ToTensor(),
+                             transforms.Normalize((0.1307,), (0.3081,))
+                         ])),
+            batch_size=args.batch_size, shuffle=True, **kwargs)
 
     model = Net().to(device)
     optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
